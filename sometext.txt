@@ -1,2 +1,2 @@
-A allocate 128
+A allocate 300
 free A
