@@ -1,0 +1,2 @@
+A allocate 128
+free A

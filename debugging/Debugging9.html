@@ -1,0 +1,124 @@
+<!-- This is a little game where you are trying to put the numbers in order. 
+There are two operations: (1) swap the first two numbers, (2) rotate everythng
+left, with the first item wrapping around to the end.  However, there seems
+to be an error with the rotation. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Swap-Rotate Viewer</title>
+    <style>
+        .card {
+            display: inline-block;
+            border: 1px solid black;
+            width : 20pt;
+            font-size: 18pt;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="card1">1</div>
+    <div class="card" id="card2">2</div>
+    <div class="card" id="card3">3</div>
+    <div class="card" id="card4">4</div>
+    <div class="card" id="card5">5</div>
+    <div class="card" id="card6">6</div>
+    <div class="card" id="card7">7</div>
+    <div class="card" id="card8">8</div>
+    <div class="card" id="card9">9</div>
+
+    <p>
+        <button id="swapButton">Swap</button>
+        <button id="rotateButton">Rotate</button>
+        <button id="undoButton">Undo</button>
+        <button id="resetButton">Reset</button>
+        <button id="newButton">New</button>
+    </p>
+
+    <p id = "moveP">Move sequence:</p>
+    <p id = "countP">Total moves: 0</p>
+
+    <script>
+        var shuffle = function(a, n) {
+            for (var i=0; i<n; i++)
+            {
+                var r1 = Math.floor(Math.random() * a.length);
+                var r2 = Math.floor(Math.random() * a.length);
+                var hold = a[r1];
+                a[r1] = a[r2];
+                a[r2] = hold;
+            }
+        };
+
+        //var start_L = [4, 1, 5, 9, 6, 3, 8, 7, 2];
+        var start_L = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        shuffle(start_L, 50);
+        var L = start_L.slice();
+        var moves = "";
+
+        var update = function() {
+            for (var i=0; i<9; i++)
+            {
+                document.getElementById("card"+(i+1)).innerHTML = L[i];
+                document.getElementById("moveP").innerHTML = "Move sequence: " + moves;
+                document.getElementById("countP").innerHTML = "Total moves: " + moves.length;
+            }
+        };
+
+        var swap = function() {
+            var hold = L[0];
+            L[0] = L[1];
+            L[1] = hold;
+            moves += "S";
+            update();
+        };
+
+        var rotate = function() {
+            for (var i=0; i<9; i++)
+                L[i] = L[i+1];
+            moves += "R";
+            update();
+        }
+
+        var undo = function() {
+            if (moves.length > 0)
+            {
+                if (moves[moves.length-1] == "S")
+                {
+                    var hold = L[0];
+                    L[0] = L[1];
+                    L[1] = hold;
+                }
+                else
+                {
+                    var hold = L[8];
+                    for (var i=8; i>0; i--)
+                        L[i] = L[i-1];
+                    L[0] = hold;
+                }
+                moves = moves.slice(0, moves.length-1);
+                update();
+            }
+        };
+
+        var reset = function() {
+            L = start_L.slice();
+            moves = "";
+            update();
+        };
+
+        var newPuzzle = function() {
+            shuffle(start_L, 50);
+            reset();
+        }
+
+        update();
+        document.getElementById("swapButton").addEventListener('click', swap, false);
+        document.getElementById("rotateButton").addEventListener('click', rotate, false);
+        document.getElementById("undoButton").addEventListener('click', undo, false);
+        document.getElementById("resetButton").addEventListener('click', reset, false);
+        document.getElementById("newButton").addEventListener('click', newPuzzle, false);
+    </script>
+</body>
+</html>
