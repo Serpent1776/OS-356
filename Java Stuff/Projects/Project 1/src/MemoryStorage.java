@@ -17,30 +17,55 @@ public class MemoryStorage {
     * allocate() allocates a memory block to an array.
     */
    public void allocate(MemoryBlock mem) throws MemoryException {
+     boolean stored = false;
      switch (mem.getBytes()) {
           case 5:
           for(int i = 0; i < fiveblocks.length; i++) {
                if(fiveblocks[i] == null) {
                 fiveblocks[i] = mem;
+                stored = true;
                 break;
                } 
            }  
+           if(!stored) { 
+               try {
+               catchAll.add(mem); 
+           } catch (MemoryException meme) {
+               throw new MemoryException("The Memory is full!");
+           }
+          }
           break;
           case 10:
           for(int i = 0; i < tenblocks.length; i++) {
                if(tenblocks[i] == null) {
                 tenblocks[i] = mem;
+                stored = true;
                 break;
                } 
-           }     
+           }   
+           if(!stored) { 
+               try {
+               catchAll.add(mem); 
+           } catch (MemoryException meme) {
+               throw new MemoryException("The Memory is full!");
+           }
+          }  
           break;
           case 20:
           for(int i = 0; i < twentyblocks.length; i++) {
                if(twentyblocks[i] == null) {
                 twentyblocks[i] = mem;
+                stored = true;
                 break;
                } 
-           }    
+           }  
+           if(!stored) { 
+               try {
+               catchAll.add(mem); 
+           } catch (MemoryException meme) {
+               throw new MemoryException("The Memory is full!");
+           }
+          }  
           break;
      
           default:
@@ -48,7 +73,6 @@ public class MemoryStorage {
               catchAll.add(mem); 
           } catch (MemoryException meme) {
                if(mem.getBytes() < 5) {
-                    boolean stored = false;
                     for(int i = 0; i < fiveblocks.length; i++) {
                          if(fiveblocks[i] == null) {
                           fiveblocks[i] = mem;
@@ -73,12 +97,11 @@ public class MemoryStorage {
                                    } 
                                } 
                                if(!stored) {
-                                   throw new MemoryException("Memory is full!");
+                                   throw new MemoryException("The Memory is full!");
                                }   
                           }
                     } 
                } else if (mem.getBytes() < 10) {
-                    boolean stored = false;
                     for(int i = 0; i < tenblocks.length; i++) {
                          if(tenblocks[i] == null) {
                           tenblocks[i] = mem;
@@ -99,7 +122,6 @@ public class MemoryStorage {
                           } 
                     }       
                } else if (mem.getBytes() < 20) {
-                    boolean stored = false;
                     for(int i = 0; i < twentyblocks.length; i++) {
                          if(twentyblocks[i] == null) {
                           twentyblocks[i] = mem;
