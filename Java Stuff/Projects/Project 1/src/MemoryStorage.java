@@ -181,5 +181,3 @@ public class MemoryStorage {
      if(!found) {try{catchAll.remove(s);} catch (MemoryException meme) {throw meme;}}
      }
 }
-
-

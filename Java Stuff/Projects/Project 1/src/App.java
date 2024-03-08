@@ -6,6 +6,13 @@ public class App {
         Scanner fileScanner = new Scanner(new File("sometext.txt"));
         init(theMemory, fileScanner);
     }
+     /*
+     * Memory Allocation text file process for init() method
+     * For something like: A allocate 5
+     * 1. Split String by whitespace
+     * 2. Make new memory block 'A' with 5 bytes
+     * 3. Allocate the memory block with the allocate method
+     */
     public static void init(MemoryStorage memory, Scanner scan) {
         while(scan.hasNextLine()) {
             String s = scan.nextLine();
@@ -26,11 +33,4 @@ public class App {
             }
         }
     }
-    /*
-     * Memory Allocation text file process
-     * For something like: A allocate 5
-     * 1. Split String by whitespace
-     * 2. Make new memory block 'A' with 5 bytes
-     * 3. Allocate the memory block with the allocate method
-     */
 }
