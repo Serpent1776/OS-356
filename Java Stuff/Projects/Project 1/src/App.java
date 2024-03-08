@@ -5,6 +5,7 @@ public class App {
         MemoryStorage theMemory = new MemoryStorage(500, 10, 5, 5);
         Scanner fileScanner = new Scanner(new File("sometext.txt"));
         init(theMemory, fileScanner);
+        System.out.print("final looks\n" + theMemory);
     }
      /*
      * Memory Allocation text file process for init() method
@@ -16,6 +17,7 @@ public class App {
     public static void init(MemoryStorage memory, Scanner scan) {
         while(scan.hasNextLine()) {
             String s = scan.nextLine();
+            System.out.println(s);
             if(s.contains(" allocate ")) {
                 String[] sArr = s.split(" ");
                 MemoryBlock mem = new MemoryBlock(sArr[0], Integer.parseInt(sArr[2]));
@@ -24,13 +26,15 @@ public class App {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-            } else if (s.contains("free ")) {
+            }
+            if (s.contains(" free")) {
                 try {
-                    memory.free(s.split(" ")[1]);
+                    memory.free(s.split(" ")[0]);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
+            System.out.println(memory);
         }
     }
 }

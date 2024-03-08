@@ -28,12 +28,27 @@ public class MemoryStorage {
                } 
            }  
            if(!stored) { 
-               try {
-               catchAll.add(mem); 
-           } catch (MemoryException meme) {
-               throw new MemoryException("The Memory is full!");
+               for(int i = 0; i < tenblocks.length; i++) {
+                    if(tenblocks[i] == null) {
+                     tenblocks[i] = mem;
+                     stored = true;
+                     break;
+                    } 
+                }
+                if(!stored) {
+                    for(int i = 0; i < twentyblocks.length; i++) {
+                         if(twentyblocks[i] == null) {
+                          twentyblocks[i] = mem;
+                          stored = true;
+                          break;
+                         } 
+                     } 
+                if (!stored) {try {
+                    catchAll.add(mem); 
+                } catch (MemoryException meme) {throw new MemoryException("The Memory is full!");}
            }
           }
+     }
           break;
           case 10:
           for(int i = 0; i < tenblocks.length; i++) {
@@ -44,12 +59,19 @@ public class MemoryStorage {
                } 
            }   
            if(!stored) { 
-               try {
-               catchAll.add(mem); 
-           } catch (MemoryException meme) {
-               throw new MemoryException("The Memory is full!");
-           }
-          }  
+                     try {
+                    catchAll.add(mem); 
+                } catch (MemoryException meme) {
+                    for(int i = 0; i < twentyblocks.length; i++) {
+                         if(twentyblocks[i] == null) {
+                          twentyblocks[i] = mem;
+                          stored = true;
+                          break;
+                         } 
+                     } 
+               if(!stored) {throw new MemoryException("The Memory is full!");}
+               }
+           }     
           break;
           case 20:
           for(int i = 0; i < twentyblocks.length; i++) {
@@ -149,7 +171,7 @@ public class MemoryStorage {
                break;
                }
           } catch (Exception e) {
-               break;
+               
           }
      }
      if(!found) {
@@ -161,7 +183,7 @@ public class MemoryStorage {
                     break;
                }
           } catch (Exception e) {
-                    break;
+                   
                }
           }
      }
@@ -174,10 +196,55 @@ public class MemoryStorage {
                     break;
                }
           } catch (Exception e) {
-                    break;
+                    
                }
           }   
      }
      if(!found) {try{catchAll.remove(s);} catch (MemoryException meme) {throw meme;}}
+     }
+     @Override
+     public String toString() {
+        String memoryStr = "";
+        String five = "5: ";
+        String ten = "10: ";
+        String twenty = "20: ";
+        String starDash = "";
+        String catchMemStr = catchAll.toString(); 
+
+        for(int i = 0; i < fiveblocks.length; i++) {
+          if(fiveblocks[i] != null) {
+               five += fiveblocks[i].getName() + " ";
+               starDash += "*****";
+          } else {
+               five += "- ";
+               starDash += "-----";
+          }
+        }
+        for(int i = 0; i < tenblocks.length; i++) {
+          if(tenblocks[i] != null) {
+               ten += tenblocks[i].getName() + " ";
+               starDash += "**********";
+          } else {
+               ten += "- ";
+               starDash += "----------";
+          }
+        }
+        for(int i = 0; i < twentyblocks.length; i++) {
+          if(twentyblocks[i] != null) {
+               twenty += twentyblocks[i].getName() + " ";
+               starDash += "********************";
+          } else {
+               twenty += "- ";
+               starDash += "--------------------";
+          }
+        }
+        for(int i = 0; i < catchAll.getMemoryTotal(); i++) {
+          starDash += "*";
+        }
+        for(int i = 0; i < catchAll.getMemoryLeft(); i++) {
+          starDash += "-";
+        }
+        memoryStr += five + "\n" + ten + "\n" + twenty + "\n" + catchMemStr + "\n" + starDash;
+        return memoryStr;
      }
 }
