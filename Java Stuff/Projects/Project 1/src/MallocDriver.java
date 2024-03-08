@@ -1,9 +1,9 @@
 import java.io.File;
 import java.util.Scanner;
-public class App {
+public class MallocDriver {
     public static void main(String[] args) throws Exception {
         MemoryStorage theMemory = new MemoryStorage(500, 10, 5, 5);
-        Scanner fileScanner = new Scanner(new File("sometext.txt"));
+        Scanner fileScanner = new Scanner(new File("input.txt"));
         init(theMemory, fileScanner);
         System.out.print("final looks\n" + theMemory);
     }

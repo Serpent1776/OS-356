@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MallocDriver",
+            "request": "launch",
+            "mainClass": "MallocDriver",
+            "projectName": "OS-356_10c08681"
+        },
+        {
+            "type": "java",
             "name": "App",
             "request": "launch",
             "mainClass": "App",

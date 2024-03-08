@@ -161,6 +161,9 @@ public class MemoryStorage {
                break;
      }
    }
+   /*
+    * free() searches from the block with the name of the provided string s and then removes it.
+    */
    public void free(String s) throws MemoryException {
      boolean found = false;
           for(int i = 0; i < fiveblocks.length; i++) {
@@ -238,12 +241,7 @@ public class MemoryStorage {
                starDash += "--------------------";
           }
         }
-        for(int i = 0; i < catchAll.getMemoryTotal(); i++) {
-          starDash += "*";
-        }
-        for(int i = 0; i < catchAll.getMemoryLeft(); i++) {
-          starDash += "-";
-        }
+        starDash += catchAll.memoryListStarDash();
         memoryStr += five + "\n" + ten + "\n" + twenty + "\n" + catchMemStr + "\n" + starDash;
         return memoryStr;
      }
