@@ -1,6 +1,6 @@
-/*
- * 1st: making the memory block a list and marking it as removed instead of actually removing it.
- * 2nd way: using a separate list class (wip rn) to keep track of the catch all memory that is used
+/* Problem: Class doesn't implement a first fit for memory because of how the linked list works.
+ * Solution 1: making the memory block a list and marking it as removed instead of actually removing it.
+ * Solution 2: using a separate list class (wip rn) to keep track of the catch all memory that is used
  * and change remove to suit it. 
  * Removed element's number would be negative instead of being gone from the list.
  */
