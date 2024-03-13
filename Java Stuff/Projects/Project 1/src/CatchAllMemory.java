@@ -12,7 +12,7 @@ public class CatchAllMemory {
         for(int i = 0; i < memoryLimit; i++) {
             starDash[i] = '-';
         }
-        System.out.println(findLowest());
+        //System.out.println(findLowest());
     }
     public void startadd(int bytes) {
         for(int i = 0; i < bytes; i++) {
@@ -32,19 +32,13 @@ public class CatchAllMemory {
             starDash[i] = '*';
         }
     }
-    public void removeFront(int bytes) { //CW: HUGE LINEAR TIME & MEMORY COST, but the only way I know how to do it lol
-        int counter = 0;
-        for(int i = 0; i < bytes; i++) {
-            counter++;
+    public void removeFront(int bytes) { //CW: HUGE MEMORY COST, but the only way I know how to do it lol
+        String starPart = (new String(starDash)).substring(bytes, memoryLimit);
+        //char[] newStarDash = new char[memoryLimit];
+        for(int i = memoryLimit - bytes; i < memoryLimit; i++) {
+           starPart += "-";
         }
-        char[] newStarDash = new char[memoryLimit];
-        for(int i = counter; i < memoryLimit; i++) {
-            newStarDash[i - counter] = starDash[i];
-        }
-        for(int i = memoryLimit - counter; i < memoryLimit; i++) {
-            newStarDash[i] = '-';
-        }
-        starDash = newStarDash;
+        starDash = starPart.toCharArray();
         memoryTotal -= bytes;
     }
     public void removeEnd(int bytes) {
