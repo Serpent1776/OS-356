@@ -35,6 +35,7 @@ public class MallocDriver {
                 }
             }
             System.out.println(memory);
+            System.out.println(memory.catchAll.memoryList.getMemoryTotal());
         }
     }
 }

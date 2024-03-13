@@ -16,6 +16,9 @@ public class MemoryStorage {
    /*
     * allocate() allocates a memory block to an array.
     */
+    public CatchAllMemoryStorage getCatchAll() {
+        return catchAll;
+    }
    public void allocate(MemoryBlock mem) throws MemoryException {
      boolean stored = false;
      switch (mem.getBytes()) {
@@ -27,7 +30,9 @@ public class MemoryStorage {
                 break;
                } 
            }  
-           if(!stored) { 
+           if(!stored) { try {
+               catchAll.add(mem); 
+           } catch (MemoryException meme) {
                for(int i = 0; i < tenblocks.length; i++) {
                     if(tenblocks[i] == null) {
                      tenblocks[i] = mem;
@@ -42,10 +47,8 @@ public class MemoryStorage {
                           stored = true;
                           break;
                          } 
-                     } 
-                if (!stored) {try {
-                    catchAll.add(mem); 
-                } catch (MemoryException meme) {throw new MemoryException("The Memory is full!");}
+                     }       
+                if (!stored) {throw new MemoryException("The Memory is full!");}
            }
           }
      }

@@ -7,7 +7,7 @@
  * NOT the start or the end of the linked list.
  */
 public class CatchAllMemoryStorage {
-    private class Block {
+    protected class Block {
         MemoryBlock block; 
         Block next;
 
@@ -19,13 +19,18 @@ public class CatchAllMemoryStorage {
         public boolean equals(Block other) {
             return block.equals(other.block); //assuming that there are no blocks of the same name
         }
+        public MemoryBlock getBlock() {
+            return block;
+        }
     }
     Block first;
     Block last;
     CatchAllMemory memoryList;
     int size;
     //int memoryTotal; depreciated
-
+    public Block getLast() {
+        return last;
+    }
 
     public CatchAllMemoryStorage(int memoryLimit) {
         this.first = null;
@@ -36,7 +41,7 @@ public class CatchAllMemoryStorage {
     //Uses first fit and treats negative numbers as possible free spots for memory
     //addjust would be used here
     public void add(MemoryBlock block) throws MemoryException {
-        if((memoryList.getMemoryTotal() + block.getBytes()) > memoryList.getMemoryLimit() && block.getBytes() > -1*memoryList.getLowest()) {
+        if((memoryList.getMemoryTotal() + block.getBytes()) > memoryList.getMemoryLimit() && (block.getBytes() > -1*memoryList.getLowest())) {
             throw new MemoryException("Memory block " + block.getName() + "'s storage would go over the memory limit!");
         }
         if(first == null) { //starter case
@@ -46,30 +51,32 @@ public class CatchAllMemoryStorage {
             first.next = temp;
             last = newBlock;
             memoryList.addtofront(block.getBytes());
+        } else if (block.getBytes() > -1*memoryList.getLowest()) {
+            Block newBlock = new Block(block, null);
+            last.next = newBlock;    
+            last = newBlock;
+            memoryList.addtoend(block.getBytes());
         } else { //first fit algorithm implementation
             Block newBlock = new Block(block, null);
             Block b1 = first;
             boolean fit = false;
-            int pos = 1;
+            int pos = 0;
             while(b1.next != null && !fit) {
-                if(memoryList.get(pos) < 0 && (memoryList.get(pos) + block.getBytes()) <= 0) {
+                if(memoryList.get(pos + 1) < 0 && (memoryList.get(pos + 1) + block.getBytes()) <= 0) {
                     fit = true;
-                    memoryList.addjust(pos, block.getBytes());
+                    memoryList.addjust(pos + 1, block.getBytes());
                     break;
                 }
                 b1 = b1.next;
                 pos++;
+                if(memoryList.get(pos) < 0 && (memoryList.get(pos) + block.getBytes()) > 0) {
+                    pos++;
+                }
             }
-            if(b1.next == null) {
-                b1.next = newBlock;    
-                last = newBlock;
-                memoryList.addtoend(block.getBytes());
-            } else {
-                Block temp = b1.next;
+             
+                newBlock.next = b1.next;
                 b1.next = newBlock;
-                newBlock.next = temp;
             }
-        }
         size++;
     }
     public void remove(String s) throws MemoryException {
@@ -95,15 +102,18 @@ public class CatchAllMemoryStorage {
         while(b1.next != null && !found) {
             if(b1.next.block.getName().equals(s)) {
 
-                Block b2 = b1;            
-                memoryList.flip(pos+1);
-                b2.next = b2.next.next; 
+                Block noxt = b1.next.next;
+                b1.next = noxt;
+                memoryList.flip(pos + 1);
                 size--;
                 found = true;
                 break;
             }
             b1 = b1.next;
             pos++;
+            if(memoryList.get(pos) < 0) {
+                pos++;
+            }
         }
         if(!found) {throw new MemoryException("Memory Block " + s + " not found.");}
     }
@@ -128,7 +138,7 @@ public class CatchAllMemoryStorage {
             if(memoryList.get(pos) > 0) {
             s += b1.block.name + ":";
             s += " (" + catchMem + ", " + (catchMem + memoryList.get(pos)) + ")";
-            catchMem += memoryList.get(pos);
+            catchMem += memoryList.get(pos) + 1;
             if(b1.next != null) {
                 s += ", ";
             }

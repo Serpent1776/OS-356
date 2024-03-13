@@ -18,33 +18,50 @@ public class CatchAllMemory {
         return memoryTotal;
     }
     public void addtofront(int num) {
+        num -= 1;
         for(int i = 0; i < size; i++) {
         arr[i+1] = arr[i];
         }
         arr[0] = num;
-        memoryTotal += num;
+        memoryTotal += num + 1;
         size++;
 
     }
     public void removeFront() {
-        memoryTotal -= arr[0];
-        for(int i = size-1; i > 0; i--) {
-                int temp = arr[i];
-                arr[i] = arr[i-1];
-                arr[i-1] = temp;
+        if(arr[0] < 0) {
+            memoryTotal -= Math.abs(arr[0]) - 1;
+            } else {
+                memoryTotal -= arr[0] + 1;
+            }
+        arr[0] = null;
+        for(int i = 0; i < size; i++) {
+                Integer temp = arr[i];
+                arr[i] = arr[i+1];
+                arr[i+1] = temp;
             }
         size--;
+        if(arr[0] < 0) {
+            removeFront();
+        }
         //System.out.println(size);
     }
     public void removeEnd() {
-        memoryTotal -= arr[size-1];
+        if(arr[0] < 0) {
+            memoryTotal -= Math.abs(arr[size - 1]) - 1;
+            } else {
+                memoryTotal -= arr[size - 1] + 1;
+            }
         arr[size-1] = null;
         size--;
+        if(arr[0] < 0) {
+            removeEnd();
+        }
     }
     public void addtoend(int num) {
+        num -= 1;
         arr[size] = num; 
         size++;
-        memoryTotal += num;
+        memoryTotal += num + 1; 
     }
     public void add(int pos, int num) {
         for(int i = size - 1; i > pos; i--) { 
@@ -56,7 +73,7 @@ public class CatchAllMemory {
         size++;
     }
     public void flip(int pos) {
-        arr[pos] = -arr[pos];
+        arr[pos] = -arr[pos] - 1;
         fuse();
         findLowest();
     }
@@ -95,7 +112,7 @@ public class CatchAllMemory {
     public void addjust(int pos, int num) {
        if(arr[pos] < 0) {
         if(arr[pos] + num == 0) {
-            arr[pos] = num;
+            arr[pos] = num - 1;
             
         } else {
             add(pos - 1, num);
