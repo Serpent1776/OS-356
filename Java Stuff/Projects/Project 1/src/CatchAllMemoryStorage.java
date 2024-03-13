@@ -1,11 +1,3 @@
-/* Problem: Class doesn't implement a first fit for memory because of how the linked list works.
- * Solution 1 (not implemented): making the memory block a list and marking it as removed instead of actually removing it.
- * Solution 2 (implemented and works!): using a separate list class to keep track of the catch all memory that is used
- * and change remove to suit it. 
- * Removed element's number would be negative instead of being gone from the separate list.
- * implementation would be active when an element is removed in the middle of the linked list.
- * NOT the start or the end of the linked list.
- */
 public class CatchAllMemoryStorage {
     protected class Block {
         MemoryBlock block; 
