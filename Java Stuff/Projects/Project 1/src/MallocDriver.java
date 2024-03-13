@@ -14,7 +14,7 @@ public class MallocDriver {
      * 2. Make new memory block 'A' with 5 bytes
      * 3. Allocate the memory block with the allocate method
      */
-    public static void init(MemoryStorage memory, Scanner scan) {
+    public static void init(MemoryStorage memory, Scanner scan) throws Exception {
         while(scan.hasNextLine()) {
             String s = scan.nextLine();
             System.out.println(s);

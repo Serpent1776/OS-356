@@ -10,9 +10,11 @@ public class CatchAllMemoryStorage {
     protected class Block {
         MemoryBlock block; 
         Block next;
+        int leftovers;
 
         public Block(MemoryBlock block, Block next) {
             this.block = block;
+            this.leftovers = 0;
             this.next = next;
         }
         @SuppressWarnings("unused")
@@ -38,82 +40,72 @@ public class CatchAllMemoryStorage {
         this.memoryList = new CatchAllMemory(memoryLimit);
         this.size = 0;
     }
-    //Uses first fit and treats negative numbers as possible free spots for memory
-    //addjust would be used here
+    
     public void add(MemoryBlock block) throws MemoryException {
-        if((memoryList.getMemoryTotal() + block.getBytes()) > memoryList.getMemoryLimit() && (block.getBytes() > -1*memoryList.getLowest())) {
+        if((memoryList.getMemoryTotal() - 1 + block.getBytes()) > memoryList.getMemoryLimit() - 1 && (block.getBytes() > memoryList.findLowest())) {
             throw new MemoryException("Memory block " + block.getName() + "'s storage would go over the memory limit!");
-        }
-        if(first == null) { //starter case
+        } else if(first == null) { //starter case
             Block newBlock = new Block(block, first);
             Block temp = first;
             first = newBlock;
             first.next = temp;
             last = newBlock;
-            memoryList.addtofront(block.getBytes());
-        } else if (block.getBytes() > -1*memoryList.getLowest()) {
-            Block newBlock = new Block(block, null);
-            last.next = newBlock;    
-            last = newBlock;
-            memoryList.addtoend(block.getBytes());
+            memoryList.startadd(block.getBytes());
+            
         } else { //first fit algorithm implementation
-            Block newBlock = new Block(block, null);
+            int target = this.memoryList.firstFitFind(block.getBytes());
             Block b1 = first;
-            boolean fit = false;
             int pos = 0;
-            while(b1.next != null && !fit) {
-                if(memoryList.get(pos + 1) < 0 && (memoryList.get(pos + 1) + block.getBytes()) <= 0) {
-                    fit = true;
-                    memoryList.addjust(pos + 1, block.getBytes());
-                    break;
-                }
+            while(b1.next != null && pos + b1.next.leftovers < target && pos + b1.block.getBytes() < target) {
+                pos += b1.block.getBytes() + b1.next.leftovers;        
                 b1 = b1.next;
-                pos++;
-                if(memoryList.get(pos) < 0 && (memoryList.get(pos) + block.getBytes()) > 0) {
-                    pos++;
-                }
             }
-             
-                newBlock.next = b1.next;
-                b1.next = newBlock;
-            }
-        size++;
+            if(b1.next != null) {
+            pos += b1.block.getBytes();
+            memoryList.add(pos, block.getBytes());
+            b1.next.leftovers -= block.getBytes();
+            Block newBlock = new Block(block, b1.next);
+            b1.next = newBlock;  
+            } else {
+                Block newBlock = new Block(block, null);
+                last.next = newBlock;    
+                last = newBlock;
+                memoryList.addtoend(block.getBytes());
+            }  
     }
+    size++;
+}
     public void remove(String s) throws MemoryException {
         if(first.block.getName().equals(s)) { //remove front case
 
-            memoryList.removeFront();
+            memoryList.removeFront(first.block.getBytes());
             size--;
             first = first.next;
         } else if(last.block.getName().equals(s)) { //remove last case
-            memoryList.removeEnd();
+            memoryList.removeEnd(last.block.getBytes());
             size--;
             Block b1 = first;
             while(b1.next.next != null) {b1 = b1.next;}
             last = b1;
             last.next = null;
-        } else { /*"remove" case 
-        *(doesn't actually remove the element from the memory list (sign flips it), 
+        } else { /*"remove" case  
         * but removes it from the linked list)
         */
         Block b1 = first;
-        int pos = 0;
         boolean found = false;
+        int pos = -1;
         while(b1.next != null && !found) {
+            pos += b1.block.getBytes() + b1.leftovers;
             if(b1.next.block.getName().equals(s)) {
-
-                Block noxt = b1.next.next;
-                b1.next = noxt;
-                memoryList.flip(pos + 1);
+                Block next2 = b1.next.next;
+                next2.leftovers += b1.next.block.getBytes() + b1.next.leftovers;
+                memoryList.remove(pos, next2.leftovers);
+                b1.next = next2;
                 size--;
                 found = true;
                 break;
             }
             b1 = b1.next;
-            pos++;
-            if(memoryList.get(pos) < 0) {
-                pos++;
-            }
         }
         if(!found) {throw new MemoryException("Memory Block " + s + " not found.");}
     }
@@ -125,29 +117,26 @@ public class CatchAllMemoryStorage {
         return memoryList;
     }
     public String memoryListStarDash() {
-        return memoryList.starDash();
+        return memoryList.toString();
     }
     @Override
     public String toString() {
         String s = "{";
+        //char[] starDash = memoryList.getStarDash();
         int catchMem = 0;
         Block b1 = first;
-        int pos = 0;
+        int pos = -1;
         while(b1 != null) {
-            
-            if(memoryList.get(pos) > 0) {
+            pos += b1.block.getBytes() + b1.leftovers;
             s += b1.block.name + ":";
-            s += " (" + catchMem + ", " + (catchMem + memoryList.get(pos)) + ")";
-            catchMem += memoryList.get(pos) + 1;
+            s += " (" + catchMem + ", " + (pos) + ")";
             if(b1.next != null) {
+                catchMem += b1.block.getBytes() + b1.next.leftovers;    
                 s += ", ";
+            } else {
+                catchMem += b1.block.getBytes();
             }
-            b1 = b1.next;
-        } else {
-            catchMem -= memoryList.get(pos);
-        }
-            pos++;
-            
+            b1 = b1.next;     
         }
         s += "}";
         return s;
