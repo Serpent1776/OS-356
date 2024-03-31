@@ -17,6 +17,7 @@ def g():
                 break
         else:    
             print(i)
+            i+=1
     lock.release()                 
             
 
