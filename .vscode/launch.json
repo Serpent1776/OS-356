@@ -6,6 +6,34 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CitationDriver",
+            "request": "launch",
+            "mainClass": "CitationDriver",
+            "projectName": "OS-356_bb7fcbd"
+        },
+        {
+            "type": "java",
+            "name": "MlaDriver",
+            "request": "launch",
+            "mainClass": "MlaDriver",
+            "projectName": "OS-356_bb7fcbd"
+        },
+        {
+            "type": "java",
+            "name": "App",
+            "request": "launch",
+            "mainClass": "App",
+            "projectName": "OS-356_bb7fcbd"
+        },
+        {
+            "type": "java",
+            "name": "Playground",
+            "request": "launch",
+            "mainClass": "Playground",
+            "projectName": "OS-356_bb7fcbd"
+        },
+        {
+            "type": "java",
             "name": "MallocDriver",
             "request": "launch",
             "mainClass": "MallocDriver",
